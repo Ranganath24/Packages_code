@@ -1,0 +1,53 @@
+CREATE OR REPLACE PACKAGE EmployeePackage AS
+    -- Declaration of procedures and functions
+    PROCEDURE InsertEmployee(emp_id IN NUMBER, emp_name IN VARCHAR2, emp_salary IN NUMBER);
+    PROCEDURE UpdateEmployeeSalary(emp_id IN NUMBER, new_salary IN NUMBER);
+    PROCEDURE DeleteEmployee(emp_id IN NUMBER);
+    FUNCTION GetEmployeeName(emp_id IN NUMBER) RETURN VARCHAR2;
+    FUNCTION GetEmployeeSalary(emp_id IN NUMBER) RETURN NUMBER;
+END EmployeePackage;
+/
+
+CREATE OR REPLACE PACKAGE BODY EmployeePackage AS
+    -- Implementation of procedures and functions
+    PROCEDURE InsertEmployee(emp_id IN NUMBER, emp_name IN VARCHAR2, emp_salary IN NUMBER) IS
+    BEGIN
+        INSERT INTO employees (employee_id, employee_name, employee_salary)
+        VALUES (emp_id, emp_name, emp_salary);
+        COMMIT;
+    END InsertEmployee;
+
+    PROCEDURE UpdateEmployeeSalary(emp_id IN NUMBER, new_salary IN NUMBER) IS
+    BEGIN
+        UPDATE employees
+        SET employee_salary = new_salary
+        WHERE employee_id = emp_id;
+        COMMIT;
+    END UpdateEmployeeSalary;
+
+    PROCEDURE DeleteEmployee(emp_id IN NUMBER) IS
+    BEGIN
+        DELETE FROM employees
+        WHERE employee_id = emp_id;
+        COMMIT;
+    END DeleteEmployee;
+
+    FUNCTION GetEmployeeName(emp_id IN NUMBER) RETURN VARCHAR2 IS
+        emp_name employees.employee_name%TYPE;
+    BEGIN
+        SELECT employee_name INTO emp_name
+        FROM employees
+        WHERE employee_id = emp_id;
+        RETURN emp_name;
+    END GetEmployeeName;
+
+    FUNCTION GetEmployeeSalary(emp_id IN NUMBER) RETURN NUMBER IS
+        emp_salary employees.employee_salary%TYPE;
+    BEGIN
+        SELECT employee_salary INTO emp_salary
+        FROM employees
+        WHERE employee_id = emp_id;
+        RETURN emp_salary;
+    END GetEmployeeSalary;
+END EmployeePackage;
+/
